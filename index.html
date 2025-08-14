@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truth in Love - Interactive Relationship Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #a7f3d0 0%, #ddd6fe 25%, #fce7f3 50%, #fed7aa 75%, #fef3c7 100%);
+            min-height: 100vh;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .pulse-heart {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .scenario-1 { background: linear-gradient(135deg, #f472b6, #e11d48); }
+        .scenario-2 { background: linear-gradient(135deg, #fb923c, #d97706); }
+        .scenario-3 { background: linear-gradient(135deg, #a78bfa, #7c3aed); }
+        
+        .reminder-1 { background: linear-gradient(135deg, #34d399, #059669); }
+        .reminder-2 { background: linear-gradient(135deg, #60a5fa, #3730a3); }
+        .reminder-3 { background: linear-gradient(135deg, #a78bfa, #ec4899); }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            transform: translateY(-2px);
+        }
+        
+        .hidden { display: none; }
+        .block { display: block; }
+    </style>
+</head>
+<body class="gradient-bg">
+    <div class="max-w-4xl mx-auto p-6">
+        
+        <!-- Main Menu -->
+        <div id="main-menu" class="space-y-8">
+            <!-- Header -->
+            <div class="text-center">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="text-red-500 mr-3 pulse-heart">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        Truth in Love
+                    </h1>
+                </div>
+                <p class="text-xl font-semibold text-gray-700 mb-2">Interactive Relationship Game</p>
+                <p class="text-md text-gray-600 mb-4">Addressing Ghosting and Gaslighting in Christian Community</p>
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-3 rounded-lg inline-block">
+                    <p class="text-sm font-medium">Based on Helmi Youth Ministry Curriculum</p>
+                </div>
+            </div>
+
+            <!-- Game Mode Selection -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card-hover bg-gradient-to-br from-blue-400 to-cyan-500 text-white rounded-xl shadow-lg cursor-pointer p-8 text-center" onclick="startSoloMode()">
+                    <svg class="mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                    </svg>
+                    <h3 class="text-2xl font-bold mb-4">Solo Reflection</h3>
+                    <p class="text-blue-50 font-medium">
+                        Engage with scenarios individually for personal growth and self-examination through biblical principles.
+                    </p>
+                </div>
+
+                <div class="card-hover bg-gradient-to-br from-green-400 to-emerald-500 text-white rounded-xl shadow-lg cursor-pointer p-8 text-center" onclick="startGroupMode()">
+                    <svg class="mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.5 7.5h-3A1.5 1.5 0 0 0 14.04 8.37L11.5 16H14v6h6zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm2 16v-7H9V9.5C9 8.12 8.12 7 6.5 7S4 8.12 4 9.5V15h1.5v7h2z"/>
+                    </svg>
+                    <h3 class="text-2xl font-bold mb-4">Small Group (2-3 Players)</h3>
+                    <p class="text-green-50 font-medium">
+                        Discuss scenarios together, share perspectives, and encourage one another in faithful relationships.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Biblical Foundation -->
+            <div class="bg-gradient-to-r from-yellow-200 to-orange-200 rounded-xl shadow-lg p-8">
+                <div class="flex items-center mb-6 text-orange-800">
+                    <svg class="mr-3 text-yellow-600" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <h3 class="text-2xl font-bold">Biblical Foundation</h3>
+                </div>
+                
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-xl mb-4">
+                    <p class="font-bold text-lg mb-3">Core Truth: God's Faithful Love vs. Human Abandonment</p>
+                    <p class="text-blue-100 italic text-lg">
+                        "Never will I leave you; never will I forsake you." - Hebrews 13:5
+                    </p>
+                </div>
+                <p class="text-gray-700 font-medium">
+                    This game explores how Christ's perfect faithfulness heals our experience of abandonment, 
+                    and how His truth sets us free from the confusion of manipulation.
+                </p>
+            </div>
+
+            <!-- Copyright -->
+            <div class="bg-gradient-to-r from-gray-100 to-gray-200 rounded-xl p-6">
+                <div class="flex items-center justify-center text-gray-700">
+                    <svg class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M10.08 10.86c.05-.33.16-.62.3-.87s.34-.46.59-.62c.24-.15.54-.22.91-.23.23.01.44.05.63.13.2.09.38.21.52.36s.25.33.34.53.13.42.14.64h1.79c-.02-.47-.11-.9-.28-1.29s-.4-.73-.7-1.01-.66-.5-1.08-.66-.88-.23-1.39-.23c-.65 0-1.22.11-1.7.34s-.88.53-1.2.92-.56.84-.71 1.36S8 11.29 8 11.87v.27c0 .58.08 1.12.23 1.64s.39.97.71 1.35.72.69 1.2.91 1.05.34 1.7.34c.47 0 .91-.08 1.32-.23s.77-.36 1.08-.63.56-.58.74-.94.29-.74.3-1.15h-1.79c-.01.21-.06.4-.15.58s-.21.33-.36.46-.32.23-.52.3c-.19.07-.39.09-.6.1-.36-.01-.66-.08-.89-.23-.25-.16-.45-.37-.59-.62s-.25-.55-.3-.88-.08-.67-.08-1v-.27c0-.35.03-.68.08-1.01zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <div class="text-center">
+                        <p class="font-semibold">© 2025 Helmi Youth Ministry</p>
+                        <p class="text-sm">Created for "Truth in Love" curriculum addressing ghosting and gaslighting behaviors</p>
+                        <p class="text-sm">All rights reserved. Based on biblical principles for authentic relationships.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group Setup Screen -->
+        <div id="group-setup" class="hidden">
+            <div class="bg-gradient-to-br from-white to-blue-50 rounded-xl shadow-2xl max-w-2xl mx-auto">
+                <div class="bg-gradient-to-r from-green-400 to-emerald-500 text-white p-6 rounded-t-xl">
+                    <h2 class="text-2xl font-bold flex items-center">
+                        <svg class="mr-3" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.5 7.5h-3A1.5 1.5 0 0 0 14.04 8.37L11.5 16H14v6h6z"/>
+                        </svg>
+                        Setup Small Group
+                    </h2>
+                </div>
+                <div class="p-8">
+                    <p class="mb-6 text-gray-700 font-medium text-center">Enter the names of 2-3 participants:</p>
+                    <div id="player-inputs" class="space-y-4 mb-6">
+                        <input type="text" placeholder="Player 1 name" class="w-full p-3 border-2 rounded-xl focus:ring-4 focus:ring-blue-300 focus:border-blue-500 transition-all duration-200 font-medium">
+                        <input type="text" placeholder="Player 2 name" class="w-full p-3 border-2 rounded-xl focus:ring-4 focus:ring-blue-300 focus:border-blue-500 transition-all duration-200 font-medium">
+                    </div>
+                    <button onclick="addPlayer()" id="add-player-btn" class="mb-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-200">
+                        Add Another Player
+                    </button>
+                    <div class="flex gap-4">
+                        <button onclick="startGame()" class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-2 px-6 rounded-xl transition-all duration-200">
+                            Start Game
+                        </button>
+                        <button onclick="showMainMenu()" class="bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white font-semibold py-2 px-6 rounded-xl transition-all duration-200">
+                            Back to Menu
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="hidden">
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="scenario-title" class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        Scenario 1 of 3
+                    </h2>
+                    <button onclick="resetGame()" class="bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-200">
+                        Reset
+                    </button>
+                </div>
+                <div class="w-full bg-gray-300 rounded-full h-3 shadow-inner">
+                    <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500 shadow-lg" style="width: 33%"></div>
+                </div>
+            </div>
+
+            <!-- Current Player Display -->
+            <div id="current-player" class="hidden mb-6 bg-gradient-to-r from-yellow-400 to-orange-400 text-white rounded-xl shadow-xl p-5 text-center">
+                <p class="text-lg font-bold">
+                    <span class="opacity-90">Current Turn: </span>
+                    <span id="current-player-name" class="text-white text-xl"></span>
+                </p>
+            </div>
+
+            <!-- Scenario Card -->
+            <div id="scenario-card" class="scenario-1 text-white rounded-xl shadow-2xl mb-6 p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 id="scenario-name" class="text-2xl font-bold">The Slow Fade</h3>
+                        <p id="scenario-category" class="text-lg opacity-90 font-medium">Dating Dynamics</p>
+                    </div>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" class="opacity-80">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+                    </svg>
+                </div>
+                <p id="scenario-story" class="text-white leading-relaxed mb-6 text-lg font-medium">
+                    Emma (20) meets Mikael (22) online. After great conversations for three weeks and two good dates, Mikael suggests exclusivity. Emma agrees hopefully. But Mikael's responses become shorter and less frequent. When Emma asks if everything is okay, he says he's "just stressed with studies." She then sees him posting Instagram stories with another girl while leaving her messages unread. When confronted, Mikael says, "I never said we were in a relationship. You misunderstood what I meant by exclusive."
+                </p>
+                <div class="bg-white bg-opacity-20 p-5 rounded-xl backdrop-blur-sm">
+                    <p class="font-bold text-white mb-2 text-lg">Biblical Foundation:</p>
+                    <p id="scenario-verse" class="text-white italic text-lg">Ephesians 4:25 - 'Put away falsehood, let each one speak truth with his neighbor'</p>
+                </div>
+            </div>
+
+            <!-- Discussion Questions -->
+            <div class="bg-gradient-to-br from-white to-blue-50 rounded-xl shadow-2xl">
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6 rounded-t-xl">
+                    <h3 class="text-xl font-bold">Discussion Questions</h3>
+                </div>
+                <div class="p-6">
+                    <div id="questions-container" class="space-y-6">
+                        <!-- Questions will be inserted here -->
+                    </div>
+                    
+                    <div class="mt-8 p-6 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl border-2 border-purple-300">
+                        <p class="font-bold text-purple-800 mb-3 text-lg">Reflection Focus:</p>
+                        <p id="reflection-text" class="text-purple-700 italic font-medium text-lg">Consider how God's covenant faithfulness contrasts with human abandonment patterns.</p>
+                    </div>
+
+                    <div class="mt-8 flex justify-center">
+                        <button onclick="nextScenario()" id="next-btn" class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl text-lg transition-all duration-200">
+                            Next Scenario
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reflection Screen -->
+        <div id="reflection-screen" class="hidden space-y-8">
+            <!-- Personal Reflection -->
+            <div class="bg-gradient-to-br from-white to-purple-50 rounded-xl shadow-2xl">
+                <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-6 rounded-t-xl">
+                    <h2 class="text-3xl text-center font-bold">Personal Reflection & Application</h2>
+                </div>
+                <div class="p-8">
+                    <p class="text-center text-gray-700 mb-8 text-lg font-medium">
+                        Take time for honest self-examination and commitment to biblical relationship patterns.
+                    </p>
+                    
+                    <h3 class="text-2xl font-bold mb-6 text-gray-800 text-center">Reflection Questions</h3>
+                    <div class="space-y-4">
+                        <div class="p-5 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-xl border-l-4 border-blue-500 shadow-lg">
+                            <p class="text-blue-800 font-semibold text-lg">Have I ever ghosted someone? What motivated that choice?</p>
+                        </div>
+                        <div class="p-5 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-xl border-l-4 border-blue-500 shadow-lg">
+                            <p class="text-blue-800 font-semibold text-lg">Do I use manipulation to get what I want in relationships?</p>
+                        </div>
+                        <div class="p-5 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-xl border-l-4 border-blue-500 shadow-lg">
+                            <p class="text-blue-800 font-semibold text-lg">When have I been ghosted or gaslit? How did it affect me?</p>
+                        </div>
+                        <div class="p-5 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-xl border-l-4 border-blue-500 shadow-lg">
+                            <p class="text-blue-800 font-semibold text-lg">How can God's faithfulness heal wounds of abandonment?</p>
+                        </div>
+                        <div class="p-5 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-xl border-l-4 border-blue-500 shadow-lg">
+                            <p class="text-blue-800 font-semibold text-lg">What fears drive my avoidance of difficult conversations?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Reminders -->
+            <div class="bg-gradient-to-br from-white to-green-50 rounded-xl shadow-2xl">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-6 rounded-t-xl">
+                    <h3 class="text-2xl font-bold">Daily Reminders for Healing</h3>
+                </div>
+                <div class="p-8">
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="reminder-1 text-white rounded-xl text-center shadow-xl p-6 card-hover">
+                            <h4 class="font-bold text-lg mb-3">God's Promise</h4>
+                            <p class="mb-4 italic font-medium text-lg">"I will never leave you or forsake you"</p>
+                            <p class="text-sm font-semibold opacity-90">Hebrews 13:5</p>
+                        </div>
+                        <div class="reminder-2 text-white rounded-xl text-center shadow-xl p-6 card-hover">
+                            <h4 class="font-bold text-lg mb-3">Your Identity</h4>
+                            <p class="mb-4 italic font-medium text-lg">"You are chosen, beloved, holy"</p>
+                            <p class="text-sm font-semibold opacity-90">Colossians 3:12</p>
+                        </div>
+                        <div class="reminder-3 text-white rounded-xl text-center shadow-xl p-6 card-hover">
+                            <h4 class="font-bold text-lg mb-3">Your Worth</h4>
+                            <p class="mb-4 italic font-medium text-lg">"You are fearfully and wonderfully made"</p>
+                            <p class="text-sm font-semibold opacity-90">Psalm 139:14</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commitment to Action -->
+            <div class="bg-gradient-to-br from-white to-yellow-50 rounded-xl shadow-2xl">
+                <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-6 rounded-t-xl">
+                    <h3 class="text-2xl font-bold">Commitment to Action</h3>
+                </div>
+                <div class="p-8">
+                    <div class="bg-gradient-to-r from-yellow-100 to-orange-100 p-8 rounded-xl mb-6 border-2 border-yellow-300">
+                        <h4 class="font-bold text-yellow-800 mb-4 text-xl">Personal Commitments</h4>
+                        <div class="space-y-3 text-yellow-800">
+                            <p class="font-semibold text-lg">• <strong>Communication Covenant:</strong> Commit to honest, direct communication</p>
+                            <p class="font-semibold text-lg">• <strong>Conflict Resolution:</strong> Practice biblical methods of addressing issues directly</p>
+                            <p class="font-semibold text-lg">• <strong>Accountability:</strong> Share your commitments with trusted friends</p>
+                            <p class="font-semibold text-lg">• <strong>Prayer:</strong> Regularly pray for transformation in relationship patterns</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-gray-700 mb-6 italic text-xl font-semibold">
+                            "Will you choose to follow Christ's model of faithful, truthful love even when it's costly?"
+                        </p>
+                        <button onclick="resetGame()" class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-4 px-8 rounded-xl text-lg card-hover transition-all duration-300">
+                            Begin Again with New Scenarios
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright Footer -->
+            <div class="bg-gradient-to-r from-gray-100 to-gray-200 rounded-xl p-6">
+                <div class="flex items-center justify-center text-gray-700">
+                    <svg class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M10.08 10.86c.05-.33.16-.62.3-.87s.34-.46.59-.62c.24-.15.54-.22.91-.23.23.01.44.05.63.13.2.09.38.21.52.36s.25.33.34.53.13.42.14.64h1.79c-.02-.47-.11-.9-.28-1.29s-.4-.73-.7-1.01-.66-.5-1.08-.66-.88-.23-1.39-.23c-.65 0-1.22.11-1.7.34s-.88.53-1.2.92-.56.84-.71 1.36S8 11.29 8 11.87v.27c0 .58.08 1.12.23 1.64s.39.97.71 1.35.72.69 1.2.91 1.05.34 1.7.34c.47 0 .91-.08 1.32-.23s.77-.36 1.08-.63.56-.58.74-.94.29-.74.3-1.15h-1.79c-.01.21-.06.4-.15.58s-.21.33-.36.46-.32.23-.52.3c-.19.07-.39.09-.6.1-.36-.01-.66-.08-.89-.23-.25-.16-.45-.37-.59-.62s-.25-.55-.3-.88-.08-.67-.08-1v-.27c0-.35.03-.68.08-1.01zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <div class="text-center">
+                        <p class="font-bold text-lg">© 2025 Helmi Youth Ministry</p>
+                        <p class="font-medium">Created for "Truth in Love" curriculum addressing ghosting and gaslighting behaviors</p>
+                        <p class="text-sm">All rights reserved. Based on biblical principles for authentic relationships.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let gameState = {
+            mode: 'solo', // 'solo' or 'group'
+            players: [],
+            currentPlayer: 0,
+            currentScenario: 0,
+            scenarios: [
+                {
+                    title: 'Katoaminen Kesken Kaiken',
+                    category: 'Seurusteludynamiikka',
+                    colorClass: 'scenario-1',
+                    story: `Aino (20) tapaa Joonas (22) Tinderin kautta. Kolmen viikon hyvien keskustelujen ja kahden mukavan tapaamisen jälkeen Kampin Citymarketilla ja Esplanadin puistossa, Joonas ehdottaa yksinoikeutta. Aino suostuu toiveikkaana. Mutta Joonaksen vastaukset alkavat lyhentyä ja harveta. Kun Aino kysyy, onko kaikki kunnossa, hän sanoo olevansa "vain stressaantunut tenteistä Aalto-yliopistolla." Sitten Aino näkee Joonaksen postaamassa Instagram-tarinoita toisen tytön kanssa Suomenlinnassa, samalla kun hän jättää Ainon viestit lukematta. Kun Aino ottaa asian puheeksi, Joonas vastaa: "En koskaan sanonut, että olemme seurustelusuhteessa. Ymmärsit väärin, mitä tarkoitin yksinoikeudella."`,
+                    questions: [
+                        "Miten Joonaksen sanat eivät vastanneet hänen tekojaan?",
+                        "Mitä tämä paljastaa sydämemme tarpeesta turvallisuudelle?",
+                        "Miten haavoittuvuuden pelko saattoi johtaa Joonaksen käyttäytymiseen?",
+                        "Miltä raamatullinen rakkaus näyttäisi erilaisena tässä tilanteessa?"
+                    ],
+                    verse: "Efesolaiskirje 4:25 - 'Riisukaa pois valhe ja puhukaa totuutta kukin lähimmäisensä kanssa'",
+                    reflection: "Pohtikaa, kuinka Jumalan liittouskollisuus eroaa inhimillisistä hylkäämisen malleista."
+                },
+                {
+                    title: 'Ulkopuolinen Nuorten Ryhmässä',
+                    category: 'Ystävyyden Pettäminen',
+                    colorClass: 'scenario-2',
+                    story: `Venla (18) liittyy Helsingin Temppeliaukion seurakunnan nuortenryhmään, kun hänen perheensä muuttaa Tampereelta. Siiri (19), vakiintunut johtaja, toivottaa hänet aluksi lämpimästi tervetulleeksi. Kuitenkin sen jälkeen, kun Venla jakaa eriävän mielipiteen raamattupiirissä ilmastonmuutoksesta, Siiri alkaa hienovaraisesti syrjäyttää häntä. Kun Venla kysyy ryhmän tapaamisista, joita hän näkee Instagramissa, Siiri sanoo: "Se oli vain pieni juttu" tai "Emme halunneet ylikuormittaa sinua." Lopulta Siiri lakkaa vastaamasta viesteihin kokonaan.`,
+                    questions: [
+                        "Mitkä piilevät motiivit saattavat ajaa Siirin käyttäytymistä?",
+                        "Miten seurakuntaympäristö tekee tästä tilanteesta monimutkaisemman?",
+                        "Mikä vastuu muilla ryhmän jäsenillä on?",
+                        "Mitä Kristuksen esimerkki opettaa ulkopuolisten vastaanottamisesta?"
+                    ],
+                    verse: "Johannes 13:34-35 - 'Rakastakaa toisianne niin kuin minä olen rakastanut teitä'",
+                    reflection: "Tutkikaa, kuinka Kristuksen osallistavuuden malli haastaa taipumuksemme poissulkemiseen."
+                },
+                {
+                    title: 'Todellisuuden Vääristely',
+                    category: 'Sosiaalisen Median Manipulaatio',
+                    colorClass: 'scenario-3',
+                    story: `Iida (19) tuntee olonsa epävarmaksi vertaillessaan suhdettaan sosiaalisessa mediassa. Hänen poikaystävänsä Eetu (20) harvoin postaa kuvia heistä yhdessä. Kun asia mainitaan, Eetu sanoo: "Olet naurettava. Se, että en postaa kaikkea, ei tarkoita, etten välitä." Ajan myötä Eetu kyseenalaistaa Iidan sosiaalisen median käytön: "Vietät liikaa aikaa puhelimessa" ja "Välität enemmän tykkäyksistä kuin suhteestamme." Kun Iida yrittää keskustella etäisyyden tunteesta, Eetu vastaa: "Luot ongelmia, joita ei ole olemassa. Ehkä sinun pitäisi viettää vähemmän aikaa netissä ja enemmän todellisuudessa."`,
+                    questions: [
+                        "Onko Eetun vastaus pätevä vai manipuloiva? Miksi?",
+                        "Miten sosiaalisen median odotukset vaikuttavat ihmissuhteisiin?",
+                        "Kuinka voimme löytää identiteettimme Kristuksesta sosiaalisen median vahvistuksen sijaan?",
+                        "Miltä terve viestintä näyttäisi tässä tilanteessa?"
+                    ],
+                    verse: "Efesolaiskirje 4:15 - 'Pysyen totuudessa rakkaudessa kasvanme kaikessa Kristukseen'",
+                    reflection: "Pohtikaa, kuinka rakkaudessa puhuttu totuus eroaa manipulaatiosta ja todellisuuden vääristelystä."
+                }
+            ]
+        };
+
+        // Screen Management
+        function showScreen(screenId) {
+            const screens = ['main-menu', 'group-setup', 'game-screen', 'reflection-screen'];
+            screens.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function showMainMenu() {
+            showScreen('main-menu');
+            resetGameState();
+        }
+
+        function resetGameState() {
+            gameState.currentPlayer = 0;
+            gameState.currentScenario = 0;
+            gameState.players = [];
+        }
+
+        // Game Mode Selection
+        function startSoloMode() {
+            gameState.mode = 'solo';
+            gameState.players = ['Solo Player'];
+            startGame();
+        }
+
+        function startGroupMode() {
+            gameState.mode = 'group';
+            showScreen('group-setup');
+        }
+
+        // Group Setup
+        function addPlayer() {
+            const playerInputs = document.getElementById('player-inputs');
+            if (playerInputs.children.length < 3) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = `Player ${playerInputs.children.length + 1} name`;
+                input.className = 'w-full p-3 border-2 rounded-xl focus:ring-4 focus:ring-blue-300 focus:border-blue-500 transition-all duration-200 font-medium';
+                playerInputs.appendChild(input);
+                
+                if (playerInputs.children.length >= 3) {
+                    document.getElementById('add-player-btn').style.display = 'none';
+                }
+            }
+        }
+
+        function startGame() {
+            if (gameState.mode === 'group') {
+                const inputs = document.querySelectorAll('#player-inputs input');
+                gameState.players = [];
+                inputs.forEach(input => {
+                    if (input.value.trim()) {
+                        gameState.players.push(input.value.trim());
+                    }
+                });
+                
+                if (gameState.players.length === 0) {
+                    alert('Please enter at least one player name.');
+                    return;
+                }
+            }
+            
+            showScreen('game-screen');
+            displayCurrentScenario();
+        }
+
+        // Game Logic
+        function displayCurrentScenario() {
+            const scenario = gameState.scenarios[gameState.currentScenario];
+            
+            // Update progress
+            const progress = ((gameState.currentScenario + 1) / gameState.scenarios.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('scenario-title').textContent = `Scenario ${gameState.currentScenario + 1} of ${gameState.scenarios.length}`;
+            
+            // Update scenario card
+            const scenarioCard = document.getElementById('scenario-card');
+            scenarioCard.className = `${scenario.colorClass} text-white rounded-xl shadow-2xl mb-6 p-8`;
+            
+            document.getElementById('scenario-name').textContent = scenario.title;
+            document.getElementById('scenario-category').textContent = scenario.category;
+            document.getElementById('scenario-story').textContent = scenario.story;
+            document.getElementById('scenario-verse').textContent = scenario.verse;
+            document.getElementById('reflection-text').textContent = scenario.reflection;
+            
+            // Display questions
+            const questionsContainer = document.getElementById('questions-container');
+            questionsContainer.innerHTML = '';
+            scenario.questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'p-5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-l-4 border-blue-500 shadow-md';
+                questionDiv.innerHTML = `
+                    <p class="font-bold text-gray-800 mb-3 text-lg">${index + 1}. ${question}</p>
+                    <p class="text-gray-600 font-medium">
+                        Take time to discuss this question thoughtfully, considering both personal experience and biblical truth.
+                    </p>
+                `;
+                questionsContainer.appendChild(questionDiv);
+            });
+            
+            // Show/hide current player indicator
+            if (gameState.mode === 'group' && gameState.players.length > 1) {
+                document.getElementById('current-player').classList.remove('hidden');
+                document.getElementById('current-player-name').textContent = gameState.players[gameState.currentPlayer];
+            } else {
+                document.getElementById('current-player').classList.add('hidden');
+            }
+            
+            // Update next button
+            const nextBtn = document.getElementById('next-btn');
+            if (gameState.mode === 'group' && gameState.currentPlayer < gameState.players.length - 1) {
+                nextBtn.textContent = 'Next Player';
+                nextBtn.onclick = nextPlayer;
+            } else if (gameState.currentScenario < gameState.scenarios.length - 1) {
+                nextBtn.textContent = 'Next Scenario';
+                nextBtn.onclick = nextScenario;
+            } else {
+                nextBtn.textContent = 'Complete Scenarios';
+                nextBtn.onclick = showReflection;
+            }
+        }
+
+        function nextPlayer() {
+            gameState.currentPlayer++;
+            if (gameState.currentPlayer >= gameState.players.length) {
+                gameState.currentPlayer = 0;
+                nextScenario();
+            } else {
+                displayCurrentScenario();
+            }
+        }
+
+        function nextScenario() {
+            gameState.currentScenario++;
+            gameState.currentPlayer = 0;
+            
+            if (gameState.currentScenario >= gameState.scenarios.length) {
+                showReflection();
+            } else {
+                displayCurrentScenario();
+            }
+        }
+
+        function showReflection() {
+            showScreen('reflection-screen');
+        }
+
+        function resetGame() {
+            showMainMenu();
+        }
+
+        // Download functionality
+        function downloadGame() {
+            const gameHtml = document.documentElement.outerHTML;
+            const blob = new Blob([gameHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'truth-in-love-game.html';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showMainMenu();
+        });
+    </script>
+</body>
+</html>
